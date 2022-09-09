@@ -19,6 +19,7 @@
   </head>
   <body>
     <?php include 'validate.php'; ?>
+    
    
 
     <div class="wrapper">
@@ -33,7 +34,7 @@
 
       <div class="container-fluid">
         <!-- registration form -->
-        <form action="validate.php" onsubmit="return handleConfirmation();" method="post" class="row g-3 needs-validation regForm hidden" novalidate>
+        <form action="validate.php"  method="post" class="row g-3 needs-validation regForm hidden" novalidate>
           <!-- Username input -->
           <div class="col-md-6">
             <label for="inputUsername" class="form-label">Username</label>
@@ -46,6 +47,7 @@
               required
             />
             <div class="valid-feedback">
+            
               Looks good!
             </div>
           </div>
@@ -135,7 +137,7 @@
 
         <div class="gap"></div>
         <!-- login form -->
-        <form class="row g-3 needs-validation logForm hidden" novalidate>
+        <form action="login.php" method="post" class="row g-3 needs-validation logForm hidden" novalidate>
           <!-- Username input -->
           <div class="col-md-6">
             <label for="inputUsername" class="form-label">Username</label>
@@ -172,9 +174,21 @@
         </form>
         <div class="gap"></div>
       </div>
+     
     </div>
-    
-  <script src="index.js"></script>
+    <div class="decision">
+    <?php if(isset($_GET['msg'])) {$message = "User exist"; echo $message; };?> 
+</div>
+<div class="decision">
+    <?php if(isset($_GET['suc_msg'])) {$message = "Sign Up Successful"; echo $message;};?> 
+</div>
+<div class="decision">
+    <?php if(isset($_GET['fail_msg'])) {$message = 'Registration failed!'. $sql_staffs . '<br />'. $db->error; echo $message; };?> 
+</div>
+<div class="decision">
+    <?php if(isset($_GET['login_fail_msg'])) {$message = 'login failed!'. $query_info . '<br />'. $db->error; echo $message; };?> 
+</div>
+  <script src="reg.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

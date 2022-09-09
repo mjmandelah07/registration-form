@@ -33,18 +33,19 @@ function handleLogin() {
   // registerForm.classList.toggle("hidden");
 }
 
-
+/*
 function handleConfirmation() {
   // confirm if the user wants to save the data or cancel
-  if (confirm("Do you want to save this data?") == true) {
+  if (confirm("Do you want to save this data?") == true ) {
     var save;
     save = true;
-    if (save == true){
+    if (save){
       txt = "Data saved successfully!";
       alert(txt);
-    }else {
+    }elseif (!save); {
       txt = "Save Canceled!";
       alert(txt);  
     }
-  }
-}
+ }inside form : onsubmit="return handleConfirmation();"
+ } 
+*/

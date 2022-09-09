@@ -2,6 +2,7 @@
 // include the connected server
 include_once("config.php");
 
+
 // variables for the user inputs to be injected to the database
 $inputUsername= "";
 $inputPassword = '';
@@ -21,7 +22,7 @@ if (isset($_POST['submit'])) {
     if (!isset($_POST['inputUsername']) || empty($_POST['inputUsername'])) {
         $ok = false;
     }else {
-        $inputUsername = $_POST['inputUsername'];
+       $inputUsername = $_POST['inputUsername'];
     }
     if (!isset($_POST['inputPassword']) || empty($_POST['inputPassword'])) {
         $ok = false;
@@ -49,6 +50,19 @@ if (isset($_POST['submit'])) {
         $termsAndCondition = $_POST['termsAndCondition'];
     }                    
 
+    $query = sprintf("SELECT userN FROM staffs WHERE userN = '%s'",
+    $db->real_escape_string($_POST['inputUsername']));
+
+    $result = $db->query($query);
+    $row = $result->fetch_object();
+    if($row != null) {
+        $ok= false;
+        header('location: index.php?msg');
+        die();
+        
+
+    }
+    
     // insert user input into database registration_form, table(staffs) if validation is == True
     if ($ok) {
         $hash = password_hash($inputPassword, PASSWORD_DEFAULT);
@@ -61,9 +75,11 @@ if (isset($_POST['submit'])) {
 
     
     if ($db->query($sql_staffs) === True) {
-        header('location: index.php');
+         header('location: index.php?suc_msg');
+         
     }else{
-        $message = 'Registration failed!'. $sql_staffs . '<br />'. $conn->error;
+        header('location: index.php?fail_msg');
+        
     }
     
     
