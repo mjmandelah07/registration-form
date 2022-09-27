@@ -1,3 +1,9 @@
+<?php 
+include 'validate.php'; 
+
+$a = 2;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,17 +17,16 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="styles.css" />
+    
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
     </style>
 
     <title>Register</title>
+    
   </head>
   <body>
-    <?php include 'validate.php'; ?>
-    
    
-
     <div class="wrapper">
       <h1 class="title">Welcome to my page</h1>
 
@@ -117,7 +122,7 @@
                 name="termsAndCondition"
                 id="termsAndCondition"
                 value="yes" 
-                <?php if ($termsAndCondition === 'yes') echo ' checked';?>
+                <?php if ($termsAndCondition === 'yes') { echo ' checked';} ?>
                 required
               />
               <label class="form-check-label" for="termsAndCondition">
@@ -128,6 +133,7 @@
               </div>
             </div>
           </div>
+          
           <div class="col-12">
             <button  type="submit" name="submit"  value="submit" class="btn btn-primary">Register</button>
            </div>
@@ -176,23 +182,14 @@
       </div>
      
     </div>
+      
     <div class="decision">
-    <?php if(isset($_GET['msg'])) {$message = "User exist"; echo $message; };?> 
-</div>
-<div class="decision">
-    <?php if(isset($_GET['suc_msg'])) {$message = "Sign Up Successful"; echo $message;};?> 
-</div>
-<div class="decision">
-    <?php if(isset($_GET['fail_msg'])) {$message = 'Registration failed!'. $sql_staffs . '<br />'. $db->error; echo $message; };?> 
-</div>
-<div class="decision">
-    <?php if(isset($_GET['login_fail_msg'])) {$message = 'login failed!'. $query_info . '<br />'. $db->error; echo $message; };?> 
-</div>
-  <script src="reg.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
+        <?php if( $err_msg != "" ) { echo $err_msg; }; ?>
+    </div>
+
+    <script src="reg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    
   </body>
+  
 </html>

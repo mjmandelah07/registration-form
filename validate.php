@@ -1,8 +1,4 @@
 <?php
-// include the connected server
-include_once("config.php");
-
-
 // variables for the user inputs to be injected to the database
 $inputUsername= "";
 $inputPassword = '';
@@ -14,56 +10,62 @@ $termsAndCondition = '';
 // variable for the message to display for user if their registration is successful or failed
 $message="";
 
+$ok = true;
+$err_msg = "";
 
-// check if user inputs are isset and is not empty
-if (isset($_POST['submit'])) {
-    $ok = true;
+$err = array("", "User exist", "Sign Up Successful", 'Registration failed!', 'login failed!');
 
-    if (!isset($_POST['inputUsername']) || empty($_POST['inputUsername'])) {
-        $ok = false;
-    }else {
-       $inputUsername = $_POST['inputUsername'];
-    }
-    if (!isset($_POST['inputPassword']) || empty($_POST['inputPassword'])) {
-        $ok = false;
-    }else{
-        $inputPassword = $_POST['inputPassword'];
-    }    
-    if (!isset($_POST['inputLanguage']) || empty($_POST['inputLanguage'])) {
-        $ok = false;
-    }else{
-        $inputLanguage = $_POST['inputLanguage'];
-    }
-    if (!isset($_POST['inputColor']) || empty($_POST['inputColor'])) {
-        $ok = false;
-    }else{
-        $inputColor = $_POST['inputColor'];
-    }
-    if (!isset($_POST['commentTextarea']) || empty($_POST['commentTextarea'])) {
-        $ok = false;
-    }else{
-        $commentTextarea = $_POST['commentTextarea'];
-    }
-    if (!isset($_POST['termsAndCondition']) || $_POST['termsAndCondition'] === "") {    
-        $ok = false;
-    }else{
-        $termsAndCondition = $_POST['termsAndCondition'];
-    }                    
+if( filter_has_var(INPUT_GET, 'msg') && isset($err[filter_input(INPUT_GET, 'msg')]) ) {
+    $err_msg = $err[filter_input(INPUT_GET, 'msg')];
+}
 
-    $query = sprintf("SELECT userN FROM staffs WHERE userN = '%s'",
-    $db->real_escape_string($_POST['inputUsername']));
+// check if user inputs are set and are not empty
+if ( filter_has_var(INPUT_POST, 'submit') ) {
+    
+    if( filter_has_var(INPUT_POST, 'inputUsername') ) {
+        $inputUsername = filter_input(INPUT_POST, 'inputUsername');
+    }
+    
+    if( filter_has_var(INPUT_POST, 'inputPassword') ) {
+        $inputPassword = filter_input(INPUT_POST, 'inputPassword');
+    }
+    
+    if( filter_has_var(INPUT_POST, 'inputLanguage') ) {
+        $inputLanguage = filter_input(INPUT_POST, 'inputLanguage');
+    }
+    
+    if( filter_has_var(INPUT_POST, 'inputColor') ) {
+        $inputColor = filter_input(INPUT_POST, 'inputColor');
+    }
+    
+    if( filter_has_var(INPUT_POST, 'commentTextarea') ) {
+        $commentTextarea = filter_input(INPUT_POST, 'commentTextarea');
+    }
+    
+    if( filter_has_var(INPUT_POST, 'termsAndCondition') ) {
+        $termsAndCondition = filter_input(INPUT_POST, 'termsAndCondition');
+    }
+    
+    if(!$inputUsername || !$inputPassword || !$inputLanguage || !$inputColor || !$commentTextarea || !$termsAndCondition) {
+        $ok = false;
+    }                 
 
+    // connect to db only when we need it.
+    include_once("config.php");
+    
+    // check if username exist in database before you insert users information into database
+    $query = sprintf("SELECT userN FROM staffs WHERE userN = '%s'", $db->real_escape_string($inputUsername));
     $result = $db->query($query);
     $row = $result->fetch_object();
     if($row != null) {
         $ok= false;
-        header('location: index.php?msg');
+        header('location: index.php?msg=1');
         die();
         
 
     }
     
-    // insert user input into database registration_form, table(staffs) if validation is == True
+    // insert user inputs into database registration_form, table(staffs) if validation is == True
     if ($ok) {
         $hash = password_hash($inputPassword, PASSWORD_DEFAULT);
         $sql_staffs = sprintf(
@@ -75,19 +77,19 @@ if (isset($_POST['submit'])) {
 
     
     if ($db->query($sql_staffs) === True) {
-         header('location: index.php?suc_msg');
+         header('location: index.php?msg=2');
          
     }else{
-        header('location: index.php?fail_msg');
+        header('location: index.php?msg=3');
         
     }
     
+    if( $db ) {
+        $db->close();
+    }
     
 }
 
 
 
 
-
-$db->close();
-?>
